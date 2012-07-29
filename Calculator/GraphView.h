@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface GraphView : UIView
+@property (nonatomic) CGFloat scale;
+@property (nonatomic) CGPoint origin;
 
 @end

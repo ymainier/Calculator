@@ -7,12 +7,27 @@
 //
 
 #import "GraphViewController.h"
+#import "GraphView.h"
 
 @interface GraphViewController ()
+
+@property (weak, nonatomic) IBOutlet GraphView *graphView;
 
 @end
 
 @implementation GraphViewController
+
+@synthesize graphView = _graphView;
+@synthesize program = _program;
+
+- (void)setProgram:(id)program {
+    _program = program;
+    [self.graphView setNeedsDisplay];
+}
+
+- (void)setGraphView:(GraphView *)graphView {
+    _graphView = graphView;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,6 +46,7 @@
 
 - (void)viewDidUnload
 {
+    [self setGraphView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
