@@ -23,7 +23,6 @@
 @implementation CalculatorViewController
 @synthesize display = _display;
 @synthesize log = _log;
-@synthesize variablesLog = _variablesLog;
 @synthesize userIsEnteringANumber = _userIsEnteringANumber;
 @synthesize brain = _brain;
 @synthesize userHasEnteredADot = _userHasEnteredADot;
@@ -32,13 +31,11 @@
 - (void) updateLog {
     NSSet *variablesUsedInProgram = [[self.brain class] variablesUsedInProgram:self.brain.program];
     self.log.text = [[self.brain class] descriptionOfProgram:self.brain.program];
-    self.variablesLog.text = @"";
     for (NSString *variable in variablesUsedInProgram) {
         NSNumber *value = [self.testVariableValues objectForKey:variable];
         if (!value) {
             value = [NSNumber numberWithInt:0];
         }
-        self.variablesLog.text = [self.variablesLog.text stringByAppendingFormat:@"%@ = %@ ", variable, value];
     }
 }
 
@@ -109,20 +106,6 @@
     [self updateLog];
 }
 
-- (IBAction)testVariablePressed:(id)sender {
-    if ([[sender currentTitle] isEqualToString:@"Test 1"]) {
-        self.testVariableValues = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:11], @"x", [NSNumber numberWithDouble:13], @"a", [NSNumber numberWithDouble:17], @"b", nil];
-    } else if ([[sender currentTitle] isEqualToString:@"Test 2"]) {
-        self.testVariableValues = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:10], @"x", [NSNumber numberWithDouble:100], @"b", nil];
-    } else {
-        self.testVariableValues = nil;
-    }
-    
-    NSLog(@"%@", self.testVariableValues);
-    
-    [self updateAllLabels];
-}
-
 - (IBAction)undoPressed:(id)sender {
     if (self.userIsEnteringANumber) {
         NSUInteger length = [self.display.text length];
@@ -146,8 +129,4 @@
     }
 }
 
-- (void)viewDidUnload {
-    [self setVariablesLog:nil];
-    [super viewDidUnload];
-}
 @end
