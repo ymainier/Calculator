@@ -13,6 +13,7 @@
 
 @synthesize scale = _scale;
 @synthesize origin = _origin;
+@synthesize dataSource = _dataSource;
 
 - (CGFloat) scale {
     if (_scale <= 0) {
@@ -54,6 +55,7 @@
 {
     // Drawing code
     [AxesDrawer drawAxesInRect:rect originAtPoint:self.origin scale:self.scale];
+    [self.dataSource getY:self fromX:10];
 }
 
 @end

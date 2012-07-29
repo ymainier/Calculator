@@ -8,8 +8,9 @@
 
 #import "GraphViewController.h"
 #import "GraphView.h"
+#import "CalculatorBrain.h"
 
-@interface GraphViewController ()
+@interface GraphViewController () <GraphViewDataSource>
 
 @property (weak, nonatomic) IBOutlet GraphView *graphView;
 
@@ -22,11 +23,13 @@
 
 - (void)setProgram:(id)program {
     _program = program;
+    NSLog(@"Program in setProgram : %@", _program);
     [self.graphView setNeedsDisplay];
 }
 
 - (void)setGraphView:(GraphView *)graphView {
     _graphView = graphView;
+    self.graphView.dataSource = self;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -54,6 +57,11 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (float)getY:(GraphView *)sender fromX:(float)x {
+    NSLog(@"Program in getY : %@", self.program);
+    return x;
 }
 
 @end

@@ -8,6 +8,7 @@
 
 #import "CalculatorViewController.h"
 #import "CalculatorBrain.h"
+#import "GraphViewController.h"
 
 @interface CalculatorViewController ()
 @property (nonatomic) BOOL userIsEnteringANumber;
@@ -122,6 +123,12 @@
 
 - (IBAction)graphPressed {
     [self performSegueWithIdentifier:@"ShowGraph" sender:self];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"ShowGraph"]) {
+        [segue.destinationViewController setProgram:self.brain.program];
+    }
 }
 
 
