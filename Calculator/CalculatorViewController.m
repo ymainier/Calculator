@@ -120,4 +120,9 @@
     }
 }
 
+- (IBAction)graphPressed {
+    [self performSegueWithIdentifier:@"ShowGraph" sender:self];
+}
+
+
 @end
