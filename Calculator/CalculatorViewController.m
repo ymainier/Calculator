@@ -11,9 +11,8 @@
 
 @interface CalculatorViewController ()
 @property (nonatomic) BOOL userIsEnteringANumber;
-@property (nonatomic, strong) CalculatorBrain *brain;
 @property (nonatomic) BOOL userHasEnteredADot;
-@property (nonatomic, strong) NSDictionary *testVariableValues;
+@property (nonatomic, strong) CalculatorBrain *brain;
 
 - (void) updateLog;
 - (void) updateAllLabels;
@@ -26,17 +25,9 @@
 @synthesize userIsEnteringANumber = _userIsEnteringANumber;
 @synthesize brain = _brain;
 @synthesize userHasEnteredADot = _userHasEnteredADot;
-@synthesize testVariableValues = _testVariableValues;
 
 - (void) updateLog {
-    NSSet *variablesUsedInProgram = [[self.brain class] variablesUsedInProgram:self.brain.program];
     self.log.text = [[self.brain class] descriptionOfProgram:self.brain.program];
-    for (NSString *variable in variablesUsedInProgram) {
-        NSNumber *value = [self.testVariableValues objectForKey:variable];
-        if (!value) {
-            value = [NSNumber numberWithInt:0];
-        }
-    }
 }
 
 
@@ -67,7 +58,7 @@
 }
 
 - (void)updateAllLabels {
-    self.display.text = [NSString stringWithFormat:@"%g", [[self.brain class] runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
+    self.display.text = [NSString stringWithFormat:@"%g", [[self.brain class] runProgram:self.brain.program usingVariableValues:nil]];
     
     [self updateLog];
 }
