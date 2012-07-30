@@ -20,15 +20,18 @@
 
 @synthesize graphView = _graphView;
 @synthesize program = _program;
+@synthesize programDescription = _programDescription;
 
 - (void)setProgram:(id)program {
     _program = program;
-    NSLog(@"Program in setProgram : %@", _program);
     [self.graphView setNeedsDisplay];
 }
 
 - (void)setGraphView:(GraphView *)graphView {
     _graphView = graphView;
+    [self.graphView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.graphView action:@selector(pinch:)]];
+    [self.graphView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self.graphView action:@selector(pan:)]];
+
     self.graphView.dataSource = self;
 }
 
@@ -45,23 +48,24 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.programDescription.text = [CalculatorBrain descriptionOfProgram:self.program];
 }
 
 - (void)viewDidUnload
 {
     [self setGraphView:nil];
+    [self setProgramDescription:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
 
 - (float)getY:(GraphView *)sender fromX:(float)x {
-    NSLog(@"Program in getY : %@", self.program);
-    return x;
+    return [CalculatorBrain runProgram:self.program usingVariableValues:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:x] forKey:@"x"]];
 }
 
 @end

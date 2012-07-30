@@ -15,6 +15,10 @@
 @synthesize origin = _origin;
 @synthesize dataSource = _dataSource;
 
+- (void) setScale:(CGFloat)scale {
+    _scale = scale;
+    [self setNeedsDisplay];
+}
 - (CGFloat) scale {
     if (_scale <= 0) {
         return 10;
@@ -22,11 +26,34 @@
         return _scale;
     }
 }
+- (void) setOrigin:(CGPoint)origin {
+    _origin = origin;
+    [self setNeedsDisplay];
+}
 - (CGPoint) origin {
     if (_origin.x == 0 && _origin.y == 0) {
         return CGPointMake(self.bounds.origin.x + self.bounds.size.width / 2, self.bounds.origin.y + self.bounds.size.height / 2);
     } else {
-        return CGPointMake(0, 0);
+        return _origin;
+    }
+}
+
+- (void)pinch:(UIPinchGestureRecognizer *)gesture
+{
+    if ((gesture.state == UIGestureRecognizerStateChanged) ||
+        (gesture.state == UIGestureRecognizerStateEnded)) {
+        self.scale *= gesture.scale; // adjust our scale
+        gesture.scale = 1;           // reset gestures scale to 1 (so future changes are incremental, not cumulative)
+    }
+}
+
+- (void)pan:(UIPanGestureRecognizer *)gesture
+{
+    if ((gesture.state == UIGestureRecognizerStateChanged) ||
+        (gesture.state == UIGestureRecognizerStateEnded)) {
+        CGPoint translation = [gesture translationInView:self];
+        self.origin = CGPointMake(self.origin.x + translation.x, self.origin.y + translation.y);
+        [gesture setTranslation:CGPointZero inView:self];
     }
 }
 
@@ -53,9 +80,22 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    // Drawing code
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetLineWidth(context, 2.0);
     [AxesDrawer drawAxesInRect:rect originAtPoint:self.origin scale:self.scale];
-    [self.dataSource getY:self fromX:10];
+    
+	UIGraphicsPushContext(context);
+    [[UIColor blueColor] setStroke];
+    
+	CGContextBeginPath(context);
+	CGContextMoveToPoint(context, 0, self.origin.y - [self.dataSource getY:self fromX:((-self.origin.x) / self.scale)] * self.scale);
+
+    for (float i = 1; i < self.bounds.size.width; i++) {
+        CGContextAddLineToPoint(context, i, self.origin.y - [self.dataSource getY:self fromX:((i - self.origin.x) / self.scale)] * self.scale);
+    }
+	CGContextStrokePath(context);
+    
+	UIGraphicsPopContext();
 }
 
 @end
