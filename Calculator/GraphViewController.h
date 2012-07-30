@@ -10,6 +10,6 @@
 
 @interface GraphViewController : UIViewController
 
-@property (nonatomic, weak) id program;
+@property (nonatomic, strong) id program;
 
 @end
