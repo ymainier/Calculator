@@ -57,6 +57,12 @@
     }
 }
 
+- (void)tripleTap:(UITapGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateEnded) {
+        self.origin = [gesture locationInView:self];
+    }
+}
+
 - (void)setup
 {
     self.contentMode = UIViewContentModeRedraw; // if our bounds changes, redraw ourselves
